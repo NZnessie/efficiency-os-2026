@@ -1,13 +1,88 @@
-import React, { useState, useMemo } from 'react';
-import { 
-  ChevronRight, ClipboardCheck, Zap, Target, 
-  RefreshCcw, Camera, Download, Share2, 
-  ArrowRight, BarChart3, Clock, Layout
-} from 'lucide-react';
+import React, { useState } from 'react';
 
 /**
  * 2026 Efficiency OS - 12 Archetypes Database
+ * 这是一个自包含版本，不依赖外部图标库，确保小白部署 100% 成功。
+ * 修复了 SVG 元素的语法错误。
  */
+
+// --- 简单的内置图标组件 (替代 lucide-react) ---
+const Icon = ({ name }) => {
+  const icons = {
+    zap: <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />,
+    target: (
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <circle cx="12" cy="12" r="6" />
+        <circle cx="12" cy="12" r="2" />
+      </>
+    ),
+    chart: (
+      <>
+        <line x1="18" y1="20" x2="18" y2="10" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="6" y1="20" x2="6" y2="14" />
+      </>
+    ),
+    layout: (
+      <>
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+        <line x1="3" y1="9" x2="21" y2="9" />
+        <line x1="9" y1="21" x2="9" y2="9" />
+      </>
+    ),
+    refresh: (
+      <>
+        <path d="M23 4v6h-6" />
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+      </>
+    ),
+    camera: (
+      <>
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+        <circle cx="12" cy="13" r="4" />
+      </>
+    ),
+    check: <polyline points="20 6 9 17 4 12" />,
+    arrowRight: (
+      <>
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <polyline points="12 5 19 12 12 19" />
+      </>
+    ),
+    chevronRight: <polyline points="9 18 15 12 9 6" />,
+    download: (
+      <>
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </>
+    ),
+    share: (
+      <>
+        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+        <polyline points="16 6 12 2 8 6" />
+        <line x1="12" y1="2" x2="12" y2="15" />
+      </>
+    )
+  };
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width="20" height="20" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+    >
+      {icons[name] || icons.zap}
+    </svg>
+  );
+};
+
 const ARCHETYPES_DB = {
   STRATEGIC_VISIONARY: {
     id: "STRATEGIC_VISIONARY",
@@ -130,86 +205,82 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] text-neutral-900 selection:bg-indigo-100 font-sans">
-      <header className="fixed top-0 inset-x-0 h-16 bg-white/70 backdrop-blur-lg border-b border-neutral-100 z-50">
-        <div className="max-w-screen-md mx-auto h-full flex items-center justify-between px-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold text-xs italic">OS</div>
-            <span className="font-black tracking-tighter text-lg uppercase">Efficiency 2026</span>
+    <div style={{ minHeight: '100vh', backgroundColor: '#FDFDFD', color: '#171717', fontFamily: 'sans-serif' }}>
+      <header style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '64px', backgroundColor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(10px)', borderBottom: '1px solid #E5E5E5', zIndex: 50 }}>
+        <div style={{ maxWidth: '768px', margin: '0 auto', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '32px', height: '32px', backgroundColor: 'black', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontStyle: 'italic', fontSize: '12px' }}>OS</div>
+            <span style={{ fontWeight: '900', letterSpacing: '-0.05em', fontSize: '18px', textTransform: 'uppercase' }}>Efficiency 2026</span>
           </div>
           {view !== 'landing' && (
-            <button onClick={() => { setView('landing'); setCurrentQ(0); setAnswers([]); }} className="text-xs font-bold text-neutral-400 hover:text-black flex items-center gap-1 transition-all uppercase tracking-widest">
-              <RefreshCcw size={12} /> Reset
+            <button onClick={() => { setView('landing'); setCurrentQ(0); setAnswers([]); }} style={{ fontSize: '12px', fontWeight: 'bold', color: '#A3A3A3', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', textTransform: 'uppercase' }}>
+              <Icon name="refresh" /> Reset
             </button>
           )}
         </div>
       </header>
 
-      <main className="max-w-screen-md mx-auto pt-24 pb-20 px-6">
+      <main style={{ maxWidth: '768px', margin: '0 auto', paddingTop: '96px', paddingBottom: '80px', paddingLeft: '24px', paddingRight: '24px' }}>
         
         {view === 'landing' && (
-          <div className="space-y-12 py-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-black text-white rounded-full text-[10px] font-bold uppercase tracking-widest">
-                <Zap size={10} fill="currentColor" /> 2026 Action Guide
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', backgroundColor: 'black', color: 'white', borderRadius: '999px', fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', width: 'fit-content' }}>
+                <Icon name="zap" /> 2026 Action Guide
               </div>
-              <h1 className="text-5xl font-black leading-[1.1] tracking-tighter text-neutral-900">
-                深度剖析年度状态<br/>开启 2026 <span className="text-indigo-600">高效人生</span>
+              <h1 style={{ fontSize: '48px', fontWeight: '900', lineHeight: '1.1', letterSpacing: '-0.05em' }}>
+                深度剖析年度状态<br/>开启 2026 <span style={{ color: '#4F46E5' }}>高效人生</span>
               </h1>
-              <p className="text-neutral-500 text-lg leading-relaxed max-w-md">
+              <p style={{ color: '#737373', fontSize: '18px', lineHeight: '1.6', maxWidth: '400px' }}>
                 别再盲目努力。我们会通过深度状态分析，为你匹配专属的 10 倍增长攻略与行动手册。
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-6 bg-white border border-neutral-100 rounded-3xl space-y-2 shadow-sm">
-                <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center"><BarChart3 size={20}/></div>
-                <h3 className="font-bold">状态审计</h3>
-                <p className="text-xs text-neutral-400 leading-relaxed">精准识别你当前的大脑负荷与行动阻力。</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+              <div style={{ padding: '24px', backgroundColor: 'white', border: '1px solid #E5E5E5', borderRadius: '24px' }}>
+                <div style={{ width: '40px', height: '40px', backgroundColor: '#EEF2FF', color: '#4F46E5', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}><Icon name="chart" /></div>
+                <h3 style={{ fontWeight: 'bold' }}>状态审计</h3>
+                <p style={{ fontSize: '12px', color: '#A3A3A3' }}>精准识别你当前的大脑负荷与行动阻力。</p>
               </div>
-              <div className="p-6 bg-white border border-neutral-100 rounded-3xl space-y-2 shadow-sm">
-                <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center"><Layout size={20}/></div>
-                <h3 className="font-bold">增长护照</h3>
-                <p className="text-xs text-neutral-400 leading-relaxed">生成一张可视觉化保存的 2026 效能身份卡。</p>
+              <div style={{ padding: '24px', backgroundColor: 'white', border: '1px solid #E5E5E5', borderRadius: '24px' }}>
+                <div style={{ width: '40px', height: '40px', backgroundColor: '#ECFDF5', color: '#10B981', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}><Icon name="layout" /></div>
+                <h3 style={{ fontWeight: 'bold' }}>增长护照</h3>
+                <p style={{ fontSize: '12px', color: '#A3A3A3' }}>生成一张可视觉化保存的 2026 效能身份卡。</p>
               </div>
             </div>
 
-            <div className="pt-4">
-              <button 
-                onClick={() => setView('quiz')}
-                className="group relative w-full py-6 bg-black text-white rounded-[2rem] font-black text-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-100 transition-all shadow-2xl shadow-indigo-200"
-              >
-                <div className="absolute inset-0 rounded-[2rem] bg-indigo-600 animate-pulse opacity-20 blur-xl group-hover:opacity-40"></div>
-                <span className="relative z-10">立即开始</span>
-                <ArrowRight size={24} className="relative z-10 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
+            <button 
+              onClick={() => setView('quiz')}
+              style={{ width: '100%', padding: '24px', backgroundColor: 'black', color: 'white', borderRadius: '32px', fontWeight: '900', fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', cursor: 'pointer', border: 'none', boxShadow: '0 25px 50px -12px rgba(79, 70, 229, 0.2)' }}
+            >
+              立即开始 <Icon name="arrowRight" />
+            </button>
           </div>
         )}
 
         {view === 'quiz' && (
-          <div className="space-y-12 animate-in fade-in slide-in-from-right-6 duration-500">
-            <div className="space-y-2">
-              <div className="flex justify-between items-end">
-                <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest tracking-widest">Analysis Progress</span>
-                <span className="text-sm font-black italic">{currentQ + 1} / {QUESTIONS.length}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <span style={{ fontSize: '10px', fontWeight: '900', color: '#A3A3A3', textTransform: 'uppercase' }}>Analysis Progress</span>
+                <span style={{ fontSize: '14px', fontWeight: '900', fontStyle: 'italic' }}>{currentQ + 1} / {QUESTIONS.length}</span>
               </div>
-              <div className="h-1 w-full bg-neutral-200 rounded-full overflow-hidden">
-                <div className="h-full bg-black transition-all duration-300" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
+              <div style={{ height: '4px', width: '100%', backgroundColor: '#E5E5E5', borderRadius: '999px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', backgroundColor: 'black', width: `${((currentQ + 1) / QUESTIONS.length) * 100}%`, transition: 'width 0.3s' }} />
               </div>
             </div>
 
-            <div className="space-y-8">
-              <h2 className="text-3xl font-black leading-tight tracking-tight">{QUESTIONS[currentQ].text}</h2>
-              <div className="grid gap-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+              <h2 style={{ fontSize: '30px', fontWeight: '900', letterSpacing: '-0.02em' }}>{QUESTIONS[currentQ].text}</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {QUESTIONS[currentQ].options.map((opt, i) => (
                   <button
                     key={i}
                     onClick={() => handleSelect(opt.v)}
-                    className="group w-full p-6 text-left bg-white border border-neutral-200 rounded-2xl hover:border-black hover:shadow-lg hover:shadow-neutral-100 transition-all flex justify-between items-center"
+                    style={{ width: '100%', padding: '24px', textAlign: 'left', backgroundColor: 'white', border: '1px solid #E5E5E5', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
                   >
-                    <span className="font-bold text-neutral-600 group-hover:text-black">{opt.t}</span>
-                    <ChevronRight size={18} className="text-neutral-300 group-hover:text-black" />
+                    <span style={{ fontWeight: 'bold', color: '#525252' }}>{opt.t}</span>
+                    <Icon name="chevronRight" />
                   </button>
                 ))}
               </div>
@@ -218,53 +289,53 @@ export default function App() {
         )}
 
         {view === 'report' && result && (
-          <div className="space-y-12 animate-in fade-in zoom-in-95 duration-700">
-            <div className="text-center space-y-4">
-              <div className="inline-block px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded">Audit Complete</div>
-              <h2 className="text-4xl font-black tracking-tighter">{result.name}</h2>
-              <div className="flex flex-wrap justify-center gap-2">
-                {result.tags.map(t => <span key={t} className="text-[10px] font-bold text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded">#{t}</span>)}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'inline-block', margin: '0 auto', padding: '4px 12px', backgroundColor: '#EEF2FF', color: '#4F46E5', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', borderRadius: '4px' }}>Audit Complete</div>
+              <h2 style={{ fontSize: '36px', fontWeight: '900', letterSpacing: '-0.05em' }}>{result.name}</h2>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
+                {result.tags.map(t => <span key={t} style={{ fontSize: '10px', fontWeight: 'bold', color: '#A3A3A3', backgroundColor: '#F5F5F5', padding: '2px 8px', borderRadius: '4px' }}>#{t}</span>)}
               </div>
             </div>
 
-            <section className="p-8 bg-white border border-neutral-100 rounded-[2.5rem] space-y-4 shadow-sm">
-              <div className="flex items-center gap-2 font-black text-xs uppercase text-indigo-600">
-                <ClipboardCheck size={16} /> 状态审计 Audit
+            <section style={{ padding: '32px', backgroundColor: 'white', border: '1px solid #E5E5E5', borderRadius: '40px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '900', fontSize: '12px', textTransform: 'uppercase', color: '#4F46E5' }}>
+                <Icon name="check" /> 状态审计 Audit
               </div>
-              <p className="text-neutral-600 leading-relaxed italic font-medium">“{result.audit}”</p>
+              <p style={{ color: '#525252', lineHeight: '1.6', fontStyle: 'italic', fontWeight: '500' }}>“{result.audit}”</p>
             </section>
 
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-8 bg-black text-white rounded-[2.5rem] space-y-4 shadow-xl shadow-neutral-200">
-                <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Action Rhythm</div>
-                <h3 className="text-xl font-black tracking-tight text-indigo-400">年度主节奏：{result.strategy.split(' ')[0]}</h3>
-                <p className="text-sm text-neutral-400 leading-relaxed font-light">{result.logic}</p>
+            <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+              <div style={{ padding: '32px', backgroundColor: 'black', color: 'white', borderRadius: '40px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#737373', textTransform: 'uppercase' }}>Action Rhythm</div>
+                <h3 style={{ fontSize: '20px', fontWeight: '900', color: '#818CF8' }}>年度主节奏：{result.strategy.split(' ')[0]}</h3>
+                <p style={{ fontSize: '14px', color: '#A3A3A3', lineHeight: '1.6', fontWeight: '300' }}>{result.logic}</p>
               </div>
-              <div className="p-8 bg-indigo-50 border border-indigo-100 rounded-[2.5rem] space-y-4">
-                <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">10X Move</div>
-                <h3 className="text-lg font-black text-indigo-900 leading-tight">增长杠杆：{result.leverage}</h3>
+              <div style={{ padding: '32px', backgroundColor: '#EEF2FF', border: '1px solid #E0E7FF', borderRadius: '40px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#4F46E5', textTransform: 'uppercase' }}>10X Move</div>
+                <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#312E81' }}>增长杠杆：{result.leverage}</h3>
               </div>
             </section>
 
-            <section className="space-y-6">
-              <h3 className="font-black text-sm uppercase tracking-widest flex items-center gap-2">
-                <Zap size={16} className="text-yellow-500" /> 30天重启手册
+            <section style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h3 style={{ fontWeight: '900', fontSize: '14px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Icon name="zap" /> 30天重启手册
               </h3>
-              <div className="overflow-hidden border border-neutral-100 rounded-3xl bg-white shadow-sm">
-                <table className="w-full text-sm">
-                  <thead className="bg-neutral-50 border-b border-neutral-100">
+              <div style={{ overflow: 'hidden', border: '1px solid #E5E5E5', borderRadius: '24px', backgroundColor: 'white' }}>
+                <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+                  <thead style={{ backgroundColor: '#FAFAFA', borderBottom: '1px solid #F5F5F5' }}>
                     <tr>
-                      <th className="p-4 font-black text-[10px] text-neutral-400 uppercase text-left">阶段</th>
-                      <th className="p-4 font-black text-[10px] text-neutral-400 uppercase text-left">核心任务</th>
-                      <th className="p-4 font-black text-[10px] text-neutral-400 uppercase text-left">效能目标</th>
+                      <th style={{ padding: '16px', fontWeight: '900', fontSize: '10px', color: '#A3A3A3', textTransform: 'uppercase', textAlign: 'left' }}>阶段</th>
+                      <th style={{ padding: '16px', fontWeight: '900', fontSize: '10px', color: '#A3A3A3', textTransform: 'uppercase', textAlign: 'left' }}>核心任务</th>
+                      <th style={{ padding: '16px', fontWeight: '900', fontSize: '10px', color: '#A3A3A3', textTransform: 'uppercase', textAlign: 'left' }}>效能目标</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-100">
+                  <tbody style={{ color: '#525252' }}>
                     {result.guide.map((g, i) => (
-                      <tr key={i}>
-                        <td className="p-4 font-black text-indigo-600">{g.step}</td>
-                        <td className="p-4 text-neutral-600 font-medium">{g.task}</td>
-                        <td className="p-4 text-neutral-400 text-[10px] italic">{g.goal}</td>
+                      <tr key={i} style={{ borderBottom: '1px solid #F5F5F5' }}>
+                        <td style={{ padding: '16px', fontWeight: '900', color: '#4F46E5' }}>{g.step}</td>
+                        <td style={{ padding: '16px', fontWeight: '500' }}>{g.task}</td>
+                        <td style={{ padding: '16px', color: '#A3A3A3', fontSize: '10px', fontStyle: 'italic' }}>{g.goal}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -272,88 +343,79 @@ export default function App() {
               </div>
             </section>
 
-            <section className="space-y-8 pt-10 border-t border-neutral-100">
-              <div className="flex items-center justify-between">
-                <h3 className="font-black text-sm uppercase tracking-widest">2026 增长护照 (截图保存)</h3>
-                <span className="text-[10px] text-neutral-400 flex items-center gap-1 font-bold italic"><Camera size={12}/> SAVE PASSPORT</span>
+            <section style={{ marginTop: '40px', paddingTop: '40px', borderTop: '1px solid #E5E5E5', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ fontWeight: '900', fontSize: '14px', textTransform: 'uppercase' }}>2026 增长护照 (截图保存)</h3>
+                <span style={{ fontSize: '10px', color: '#A3A3A3', fontWeight: 'bold', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px' }}><Icon name="camera" /> SAVE PASSPORT</span>
               </div>
               
-              <div className="relative w-full aspect-square md:aspect-[4/3] bg-[#0A0A0A] rounded-[3rem] p-10 text-white overflow-hidden shadow-2xl flex flex-col justify-between">
-                <div className="absolute top-0 right-0 w-full h-full opacity-40 pointer-events-none">
-                   <div className="absolute -top-20 -right-20 w-80 h-80 bg-indigo-600 rounded-full blur-[100px]" />
-                   <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-emerald-600 rounded-full blur-[100px]" />
-                </div>
-
-                <div className="relative z-10 flex justify-between items-start">
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Efficiency OS</p>
-                    <h4 className="text-2xl font-black italic tracking-tighter text-indigo-500 uppercase">Passport 2026</h4>
+              <div style={{ position: 'relative', width: '100%', backgroundColor: '#0A0A0A', borderRadius: '48px', padding: '40px', color: 'white', display: 'flex', flexDirection: 'column', gap: '32px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <p style={{ fontSize: '10px', fontWeight: '900', color: '#525252', textTransform: 'uppercase' }}>Efficiency OS</p>
+                    <h4 style={{ fontSize: '24px', fontWeight: '900', fontStyle: 'italic', color: '#6366F1', textTransform: 'uppercase' }}>Passport 2026</h4>
                   </div>
-                  <div className="px-3 py-1 border border-white/20 rounded-full text-[8px] font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2 backdrop-blur-md">
-                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" /> Active Node
+                  <div style={{ padding: '4px 12px', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '999px', fontSize: '8px', fontWeight: 'bold', color: '#10B981', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '6px', height: '6px', backgroundColor: '#10B981', borderRadius: '50%' }} /> Active Node
                   </div>
                 </div>
 
-                <div className="relative z-10">
-                   <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-[4px] mb-2">Archetype / 画像</p>
-                   <h1 className="text-5xl font-black tracking-tighter">{result.name}</h1>
-                   <p className="text-sm font-mono opacity-40 uppercase italic mt-1 tracking-wider">{result.eng}</p>
+                <div>
+                   <p style={{ fontSize: '10px', fontWeight: 'bold', color: '#525252', textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '8px' }}>Archetype / 画像</p>
+                   <h1 style={{ fontSize: '48px', fontWeight: '900', letterSpacing: '-0.05em' }}>{result.name}</h1>
+                   <p style={{ fontSize: '14px', fontFamily: 'monospace', opacity: 0.4, textTransform: 'uppercase', fontStyle: 'italic' }}>{result.eng}</p>
                 </div>
 
-                <div className="relative z-10 grid grid-cols-2 border-y border-white/10 py-6">
-                   <div className="space-y-1">
-                      <p className="text-[8px] font-bold text-neutral-500 uppercase tracking-widest">Frequency / 节奏</p>
-                      <p className="text-lg font-black">{result.frequency}</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '24px 0' }}>
+                   <div>
+                      <p style={{ fontSize: '8px', fontWeight: 'bold', color: '#525252', textTransform: 'uppercase' }}>Frequency / 节奏</p>
+                      <p style={{ fontSize: '18px', fontWeight: '900' }}>{result.frequency}</p>
                    </div>
-                   <div className="space-y-1 text-right">
-                      <p className="text-[8px] font-bold text-neutral-500 uppercase tracking-widest">Strategy / 策略</p>
-                      <p className="text-lg font-black">{result.strategy.split(' ')[0]}</p>
-                   </div>
-                </div>
-
-                <div className="relative z-10 space-y-2">
-                   <div className="flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 bg-red-500 rounded-full shadow-[0_0_8px_#ef4444]" />
-                      <p className="text-[10px] font-bold text-neutral-300 uppercase tracking-wider">Stop: {result.directives.stop}</p>
-                   </div>
-                   <div className="flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]" />
-                      <p className="text-[10px] font-bold text-neutral-300 uppercase tracking-wider">Start: {result.directives.start}</p>
-                   </div>
-                   <div className="flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
-                      <p className="text-[10px] font-bold text-neutral-300 uppercase tracking-wider">Focus: {result.directives.optimize}</p>
+                   <div style={{ textAlign: 'right' }}>
+                      <p style={{ fontSize: '8px', fontWeight: 'bold', color: '#525252', textTransform: 'uppercase' }}>Status / 策略</p>
+                      <p style={{ fontSize: '18px', fontWeight: '900' }}>{result.strategy.split(' ')[0]}</p>
                    </div>
                 </div>
 
-                <div className="relative z-10 pt-6 flex justify-between items-end">
-                   <p className="text-[10px] text-neutral-500 leading-tight uppercase font-mono tracking-tighter">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ width: '6px', height: '6px', backgroundColor: '#EF4444', borderRadius: '50%' }} />
+                      <p style={{ fontSize: '10px', fontWeight: 'bold', color: '#D4D4D4', textTransform: 'uppercase' }}>Stop: {result.directives.stop}</p>
+                   </div>
+                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ width: '6px', height: '6px', backgroundColor: '#22C55E', borderRadius: '50%' }} />
+                      <p style={{ fontSize: '10px', fontWeight: 'bold', color: '#D4D4D4', textTransform: 'uppercase' }}>Start: {result.directives.start}</p>
+                   </div>
+                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ width: '6px', height: '6px', backgroundColor: '#3B82F6', borderRadius: '50%' }} />
+                      <p style={{ fontSize: '10px', fontWeight: 'bold', color: '#D4D4D4', textTransform: 'uppercase' }}>Focus: {result.directives.optimize}</p>
+                   </div>
+                </div>
+
+                <div style={{ paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                   <p style={{ fontSize: '10px', color: '#525252', textTransform: 'uppercase', fontFamily: 'monospace' }}>
                       ISSUED: 21 JAN 2026<br/>
                       AUTH: {result.eng.slice(0,3).toUpperCase()}-OS-99X
                    </p>
-                   <div className="flex gap-1 opacity-20">
-                      <div className="w-4 h-4 bg-white rounded-sm" />
-                      <div className="w-4 h-4 bg-white rounded-sm" />
-                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <button className="flex-1 py-4 bg-white border border-neutral-200 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-neutral-50 active:scale-95 transition-all">
-                  <Download size={16} /> 保存报告
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button style={{ flex: 1, padding: '16px', backgroundColor: 'white', border: '1px solid #E5E5E5', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <Icon name="download" /> 保存报告
                 </button>
-                <button className="flex-1 py-4 bg-black text-white rounded-2xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-neutral-800 active:scale-95 transition-all">
-                  <Share2 size={16} /> 分享到小红书
+                <button style={{ flex: 1, padding: '16px', backgroundColor: 'black', color: 'white', border: 'none', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <Icon name="share" /> 分享到小红书
                 </button>
               </div>
             </section>
 
-            <footer className="py-20 text-center space-y-6">
-              <p className="text-neutral-400 text-sm leading-relaxed max-w-xs mx-auto italic">
+            <footer style={{ padding: '80px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <p style={{ color: '#A3A3A3', fontSize: '14px', fontStyle: 'italic', maxWidth: '320px', margin: '0 auto', lineHeight: '1.6' }}>
                 “{result.quote}”
               </p>
-              <div className="w-px h-10 bg-neutral-100 mx-auto" />
-              <p className="text-[10px] font-black text-neutral-200 uppercase tracking-[0.2em]">Efficiency Growth AI System</p>
+              <div style={{ width: '1px', height: '40px', backgroundColor: '#E5E5E5', margin: '0 auto' }} />
+              <p style={{ fontSize: '10px', fontWeight: '900', color: '#D4D4D4', textTransform: 'uppercase', letterSpacing: '0.2em' }}>Efficiency Growth AI System</p>
             </footer>
           </div>
         )}
